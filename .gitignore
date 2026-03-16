@@ -1,0 +1,30 @@
+# 虚拟环境
+.venv/
+venv/
+env/
+ENV/
+
+# Python 缓存/编译文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# PyCharm 配置
+.idea/
+*.iml
+out/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log
+
+# 临时/数据文件
+tmp/
+temp/
+data/
+*.csv.local
+*.db
