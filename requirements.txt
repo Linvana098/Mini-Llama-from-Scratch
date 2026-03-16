@@ -1,0 +1,22 @@
+# 基础环境
+python>=3.8,<3.11  # 兼容PyTorch 2.0+，避免3.11以上的兼容性问题
+torch==2.0.1       # 稳定版，兼顾性能和兼容性
+torchvision==0.15.2
+torchaudio==2.0.2
+
+# 数据处理
+numpy==1.24.3      # 数据存储/处理
+pandas==2.0.3      # 可选，语料清洗用
+tokenizers==0.13.3 # HuggingFace BPE分词器（轻量、高效）
+datasets==2.14.4   # 可选，语料加载辅助
+
+# 训练/日志
+tqdm==4.65.0       # 进度条
+matplotlib==3.7.2  # 可视化训练曲线
+seaborn==0.12.2    # 可选，美化图表
+tensorboard==2.14.0# 可选，可视化训练过程
+PyYAML==6.0        # 读取yaml配置文件
+
+# 辅助工具
+typing-extensions==4.7.1  # 类型注解
+psutil==5.9.5             # 可选，监控显存/CPU使用
