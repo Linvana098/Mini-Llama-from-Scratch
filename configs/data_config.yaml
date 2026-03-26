@@ -1,6 +1,6 @@
 # 语料路径
 data_paths:
-  raw_corpus: "./data/raw/sample_corpus.txt"  # 原始语料路径
+  raw_corpus: "./data/raw"  # 原始语料路径
   processed_train: "./data/processed/train_ids.npy"  # 训练集token id路径
   processed_val: "./data/processed/val_ids.npy"      # 验证集token id路径
   tokenizer_dir: "./data/tokenizer"                 # 分词器保存路径
@@ -8,15 +8,19 @@ data_paths:
 # 语料预处理参数
 preprocess:
   val_split: 0.1          # 验证集占比（10%）
-  max_seq_len: 512        # 与模型最大序列长度一致
-  min_text_len: 50        # 过滤少于50字的低质量文本
+  max_seq_len: 32        # 与模型最大序列长度一致
+  min_text_len: 20        # 过滤少于20的低质量文本
   encoding: "utf-8"       # 语料编码格式
+  processed_train: "./data/processed/train_ids.npy"  # 训练集token id路径
+  processed_val: "./data/processed/val_ids.npy"      # 验证集token id路径
+  tokenizer_dir: "./data/tokenizer"                 # 分词器保存路径
 
 # 分词器参数（BPE）
 tokenizer:
   name: "byte_level_bpe"  # 与Llama/Qwen同款BPE分词器
   vocab_size: 30000       # 与模型词汇表大小一致
-  min_frequency: 2        # 最小词频（低于2的token合并）
+  tokenizer_dir: "./data/tokenizer"                 # 分词器保存路径
+  min_frequency: 2        # 最小词频
   special_tokens:         # 特殊token（预训练必备）
     - "<pad>"             # 填充token
     - "<unk>"             # 未登录词

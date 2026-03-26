@@ -1,32 +1,32 @@
 # 硬件配置
 device: "cuda"            # 优先用GPU，无GPU则改为"cpu"（仅测试，无法训练）
-dtype: "float16"          # 混合精度训练（节省显存，16G显存必开）
+dtype: "float32"          # 混合精度训练（节省显存，16G显存必开）
 
 # 优化器参数（AdamW是预训练标配）
 optimizer:
   name: "AdamW"
-  lr: 2e-4                # 学习率（小规模预训练推荐2e-4）
-  weight_decay: 1e-4      # 权重衰减（防止过拟合）
-  betas: [0.9, 0.999]     # AdamW默认值
-  eps: 1e-8
+  lr: 1e-4                # 学习率
+  weight_decay: 8e-5      # 权重衰减（防止过拟合）
+  eps: 1e-9
 
-# 学习率调度（warmup+余弦衰减，预训练标配）
+# 学习率调度（warmup+余弦衰减）
 lr_scheduler:
   name: "cosine"
-  warmup_steps: 1000      # 预热步数（前1000步学习率线性上升）
-  total_steps: 5000       # 总训练步数（根据语料规模调整）
+  warmup_steps: 600       # 预热步数
+  total_steps: 9339       # 总训练步数（根据语料规模调整）
 
 # 训练流程参数
 training:
-  batch_size: 4           # 批次大小（16G显存设为2-4，24G设为8）
-  epochs: 5               # 训练轮次（小规模语料5轮足够，避免过拟合）
-  gradient_clip_norm: 1.0 # 梯度裁剪（防止梯度爆炸）
-  log_interval: 10        # 每10个step打印一次loss/PPL
-  save_interval: 1        # 每1轮保存一次模型权重
-  eval_interval: 500      # 每500个step计算一次验证集PPL
+  batch_size: 128          # 批次大小
+  epochs: 2                # 训练轮次（小规模语料5轮足够，避免过拟合）
+  gradient_clip_norm: 1.0  # 梯度裁剪（防止梯度爆炸）
+  log_interval: 20         # 每100个step打印一次loss/PPL
+  save_interval: 1         # 每1轮保存一次模型权重
+  eval_interval: 500      # 每2000个step计算一次验证集PPL
+  patience: 2
+  delta: 0.0003
 
 # 权重保存
 checkpoint:
   save_dir: "./checkpoints"
   save_best: True         # 保存验证集PPL最优的模型
-  load_pretrained: False  # 从零训练，无需加载预训练权重

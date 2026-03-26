@@ -1,17 +1,16 @@
 model:
   vocab_size: 30000        # 词汇表大小（适配小规模语料）
-  hidden_size: 512         # 隐藏层维度（核心参数，显存够可调至768）
-  num_heads: 8             # 注意力头数（需能被hidden_size整除：512/8=64）
-  num_layers: 4            # Decoder层数（显存够可调至6层）
-  max_seq_len: 512         # 最大序列长度（自回归预训练的核心长度）
-  dropout: 0.05            # Dropout率（防止过拟合）
+  hidden_dim:  64         # 隐藏层维度（核心参数，显存够可调至768）
+  num_heads: 2             # 注意力头数（需能被hidden_size整除：512/8=64）
+  num_layers: 2            # Decoder层数（显存够可调至6层）
+  max_seq_len: 32          # 最大序列长度（自回归预训练的核心长度）
+  dropout: 0.15            # Dropout率（防止过拟合）
   bias: False              # 禁用偏置（Llama/Qwen均禁用，提升训练效率）
 
 # RoPE位置编码参数
 rope:
-  rope_dim: 64             # 每个注意力头的RoPE维度（=hidden_size/num_heads）
-  max_position_embeddings: 8192  # RoPE支持的最大位置（兼容长序列）
+  max_position_embeddings: 1024  # RoPE支持的最大位置（兼容长序列）
 
 # SwiGLU参数
 swiglu:
-  intermediate_size: 2048  # FFN中间层维度（通常是hidden_size的4倍：512*4=2048）
+  intermediate_size: 1024  # FFN中间层维度（通常是hidden_size的4倍：512*4=2048）
