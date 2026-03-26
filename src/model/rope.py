@@ -45,38 +45,28 @@ class RoPE(nn.Module):
         # 2. 计算频率（position * inv_freq） [seq_len, head_dim / 2]
         freqs = torch.outer(position_ids, self.inv_freq)
 
+        # 3. 计算cos/sin [seq_len, head_dim / 2]
         cos = torch.cos(freqs)
         sin = torch.sin(freqs)
-
+        # [batch_size,seq_len, head_dim / 2]
         cos = cos.unsqueeze(0).repeat(batch_size, 1, 1)
         sin = sin.unsqueeze(0).repeat(batch_size, 1, 1)
-
+        # [batch_size, seq_len, head_dim / 2] -> [batch_size, 1, seq_len, head_dim / 2]
         cos = cos.unsqueeze(1)
         sin = sin.unsqueeze(1)
-        # # 3. 扩展频率到完整维度（head_dim）
-        # # [seq_len, head_dim / 2] -> [seq_len, head_dim]
-        # emb = torch.cat((freqs, freqs), dim=-1)
-        #
-        # # 4. 扩展到batch维度
-        # # [seq_len, head_dim] -> [batch_size, seq_len, head_dim]
-        # emb = emb.unsqueeze(0).repeat(batch_size, 1, 1)
-        #
-        # # [batch_size, seq_len, head_dim] -> [batch_size, 1, seq_len, head_dim // 2]
-        # cos = torch.cos(emb)[..., : self.head_dim // 2].unsqueeze(1)
-        # sin = torch.sin(emb)[..., : self.head_dim // 2].unsqueeze(1)
 
-        # 5. 将x按维度拆分（用于旋转） [batch_size, num_heads, seq_len, head_dim // 2]
+        # 4. 将x按维度拆分（用于旋转） [batch_size, num_heads, seq_len, head_dim // 2]
         x1 = x[..., : self.head_dim // 2]   # 前半
         x2 = x[..., self.head_dim // 2 :]   # 后半
 
-        # 6. 计算旋转后的embedding
+        # 5. 计算旋转后的embedding
         # 公式：
         # x1_rot = x1 * cos(emb) - x2 * sin(emb)
         # x2_rot = x1 * sin(emb) + x2 * cos(emb)
         x1_rot = x1 * cos - x2 * sin
         x2_rot = x1 * sin + x2 * cos
 
-        # 7. 拼接
+        # 6. 拼接
         x_rot =torch.cat([x1_rot, x2_rot], dim=-1)
 
         return x_rot
